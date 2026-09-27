@@ -45,9 +45,20 @@ class SafetyValidator:
         return len(missing) == 0, missing
 
     @staticmethod
+    def fix_formatting(text: str) -> str:
+        """Fix formatting anomalies such as missing spaces in dates (5Nov -> 5 Nov) or typos (catalogprice -> catalog price)."""
+        # Spacing in dates like 5Nov, 12Dec -> 5 Nov, 12 Dec
+        months = r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)"
+        text = re.sub(rf"(\d+)({months})", r"\1 \2", text, flags=re.IGNORECASE)
+        # Fix missing space in catalogprice
+        text = re.sub(r"catalogprice", "catalog price", text, flags=re.IGNORECASE)
+        return text
+
+    @staticmethod
     def clean_message(body: str, taboos: Optional[list[str]] = None) -> str:
         """Apply all sanitization rules to the composed message body."""
         body = SafetyValidator.strip_urls(body)
+        body = SafetyValidator.fix_formatting(body)
         if taboos:
             body = SafetyValidator.sanitize_taboos(body, taboos)
         return body.strip()

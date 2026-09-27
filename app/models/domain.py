@@ -131,15 +131,28 @@ class CustomerContext:
 
     @property
     def name(self) -> str:
-        raw_name = self.identity.get("name", "Customer")
-        # Strip notes like "Aanya (parent: Sneha)" or "Mr. Sharma (son's phone)"
-        return raw_name
+        return self.identity.get("name") or self.identity.get("first_name") or ""
 
     @property
     def clean_name(self) -> str:
         name = self.name
+        if not name and self.customer_id:
+            parts = self.customer_id.split("_")
+            if len(parts) >= 3 and parts[2] not in ("for", "customer", "user"):
+                name = parts[2].capitalize()
+
+        if not name or name.strip().lower() == "customer":
+            return "there"
+
         if "(" in name:
             name = name.split("(")[0].strip()
+
+        words = name.split()
+        if len(words) > 1 and words[0].lower() in ("mr.", "mrs.", "ms.", "dr.", "shri", "smt."):
+            return f"{words[0]} {words[1]}"
+        elif len(words) > 1:
+            return words[0]
+
         return name
 
     @property

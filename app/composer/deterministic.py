@@ -240,7 +240,7 @@ class DeterministicComposer(BaseComposer):
         self, category: CategoryContext, merchant: MerchantContext,
         trigger: TriggerContext, customer: Optional[CustomerContext]
     ) -> ComposedMessage:
-        c_name = customer.clean_name if customer else "Customer"
+        c_name = customer.clean_name if customer else "there"
         m_name = merchant.name
         locality = merchant.locality or merchant.city
         
@@ -282,7 +282,7 @@ class DeterministicComposer(BaseComposer):
         self, category: CategoryContext, merchant: MerchantContext,
         trigger: TriggerContext, customer: Optional[CustomerContext]
     ) -> ComposedMessage:
-        c_name = customer.clean_name if customer else "Customer"
+        c_name = customer.clean_name if customer else "there"
         owner = merchant.owner_first_name or merchant.name
         m_name = merchant.name
         locality = merchant.locality or merchant.city

@@ -113,15 +113,16 @@ class ReplyHandler:
 
         # 6. SLOT CHOICE (Customer booking flow)
         if intent == "slot_choice":
+            m_name = merchant.name if merchant else "the team"
             body = (
-                f"Done! Slot is confirmed and added to the clinic calendar. "
-                f"A confirmation note has been recorded. See you then! 🙏"
+                f"Got it! Your slot preference has been recorded and shared with {m_name}. "
+                f"They will contact you if any schedule adjustments are needed. Thank you!"
             )
             resp = ReplyResponse(
                 action="send",
                 body=body,
                 cta="none",
-                rationale="Slot booking confirmed without friction; next steps communicated."
+                rationale="Acknowledged customer slot choice and recorded preference for merchant handoff without asserting external calendar integrations."
             )
             conv.record_bot_response("send", body)
             return resp
